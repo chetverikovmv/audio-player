@@ -1,0 +1,93 @@
+.header {
+    background: #EEEEEE;
+    min-height: 330px;
+    padding: 12px;
+}
+
+.header__title {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 36px;
+    letter-spacing: -0.4px;
+    line-height: 110%;
+    color: #000000;
+    margin-bottom: 40px;
+    padding-top: 9px;
+}
+
+.header__tagline {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.4px;
+    color: #1B191C;
+    margin-top: 40px;
+}
+
+.header__terms {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 20px;
+    letter-spacing: -0.3px;
+    color: #1B191C;
+    margin-top: 9px;
+    margin-bottom: 7px;
+}
+
+.header__terms-link {
+    font-weight: 400;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+
+@media screen and (min-width: $desktop-width) {
+    .header__title {
+        font-size: 48px;
+        line-height: 52px;
+        padding-top: 0;
+    }
+
+    .header {
+        padding: 40px;
+        // padding-top: 30px;
+        min-height: 514px;
+        border: 12px solid #1B191C;
+
+        display: grid;
+        grid-template-columns: 492px auto;
+        grid-template-rows: 180px auto auto;
+        grid-template-areas:
+            "title react"
+            "tagline react"
+            "terms react";
+    }
+    
+    .header__title {
+        grid-area: title;
+        margin-bottom: 0;
+    }
+
+    .header__tagline {
+        grid-area: tagline;
+        margin-top: 0;
+        // padding-top: 24px;        
+    }
+
+    .header__terms {
+        grid-area: terms;
+        margin-top: 0;   
+        margin-bottom: 0;
+        align-self: end;
+    }
+
+    #react {
+        grid-area: react;
+        align-self: center;
+        justify-self: end;
+        margin-right: 110px;
+    }
+}

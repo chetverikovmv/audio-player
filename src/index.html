@@ -1,412 +1,122 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>SplitCost: легкий способ разделить совместные затраты!</title>
-    <link rel="preload" href="fonts/ptsans.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="fonts/ptsansbold.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="icon" href="img/favicon.png" type="image/x-icon">
+    <title>Play any audio sources directly in the browser!</title>
 </head>
 
 <body>
 
-    <div class="container">
-        <nav class="main-nav main-nav--closed">
-            <div class="main-nav__wrapper">
-                <div class="main-nav__logo-wrapper">
-                    <a>
-                        <img class="main-nav__logo-image logo__picture" src="img/SC-logo.png" width="136" height="37"
-                            alt="logo">
-                    </a>
-                </div>
-                <ul class="main-nav__list site-list">
+    <header class="header">
+        <h1 class="header__title">Play any audio sources directly in the browser!</h1>
+        <div id="react"></div>
+        <p class="header__tagline">Without any restrictions for free</p>
+        <p class="header__terms">By uploading the audio file, you agree to our <a href="#"
+                class="header__terms-link">Terms of Service.</a></p>
+    </header>
 
-
-                    <li class="site-list__item site-list__item--main site-list__item--active pause-youtube">
-                        <a
-                            onclick="{locationResolver('#/'); window.location.hash = localStorage.getItem('current') ? `#/${localStorage.getItem('current')}` : '#/'}">Главная</a>
-                    </li>
-                    <li class="site-list__item site-list__item--calculations pause-youtube">
-                        <a href="#/calculations" onclick="locationResolver('#/calculations')">Мои расчеты</a></li>
-                    <li class="site-list__item site-list__item--how-to-use">
-                        <a href="#/how-to-use" onclick="locationResolver('#/how-to-use')">Как пользоваться</a></li>
-                    <li class="site-list__item site-list__item--about pause-youtube">
-                        <a href="#/about" onclick="locationResolver('#/about')">О проекте</a></li>
-
-
-                </ul>
-
-
-                <button class="main-nav__close">
-                    <img src="img/icon-cross.svg" width="22" height="22" alt="закрыть">
-                </button>
+    <section class="description-requirements description">
+        <div class="description__wrapper">
+            <div class="description__article article">
+                <h2 class="article__title">How It Works</h2>
+                <p class="article-text">Lorem Ipsum is a "fish" text often used in print and web design. Lorem Ipsum
+                    has been the standard "fish" for Latin texts since the early 16th century. At that time, an
+                    unnamed printer created a large collection of font sizes and shapes, using Lorem Ipsum for print
+                    samples.</p>
             </div>
-            <div class="main-nav__bar-wrapper">
-
-
-                <a class="main-nav__logo">
-                    <img class="main-nav__logo-image" src="img/SC-logo.png" width="136" height="37" alt="logo">
-                </a>
-
-                <button class="main-nav__toggle">
-                    <img src="img/icon-menu.svg" width="23" height="22" alt="меню">
-                </button>
-            </div>
-        </nav>
-
-
-
-        <header class="page-header page-header--inner">
-            <div class="page-header__wrapper">
-
-                <p class="page-header__text"><b>SplitCost</b> — это легкий способ разделить совместные затраты!</p>
-                <p class="page-header__text page-header__text--small">Чтобы разобраться кто сколько должен, заполните
-                    форму ниже</p>
-
-            </div>
-        </header>
-
-
-        <main class="page-main page-main--inner">
-
-
-            <nav class="arrow-nav display-none">
-                <ul class="arrow-nav__list arrow-list">
-                    <li class="arrow-list__item arrow-list__item--members"><a>Участники</a></li>
-                    <li class="arrow-list__item arrow-list__item--costs"><a>Расходы</a></li>
-                    <li class="arrow-list__item arrow-list__item--results"><a>Результат</a></li>
-                </ul>
-            </nav>
-
-            <section class="heading">
-
-                <h1 class="heading-h1 h1-site"></h1>
-                <h2 class="heading-h2 h2-site"></h2>
-            </section>
-
-            <form action="#" class="members display-none">
-
-                <div class="members__event-name">
-                    <div class="members__wrapper">
-                        <label for="event-name">Мероприятие:</label>
-                        <input id="event-name" name="event-name" type="text" placeholder="Название" minlength="2"
-                            maxlength="40" autocomplete="off">
+            <div class="description__scheme scheme">
+                <div class="scheme__parent"></div>
+                <div class="scheme__parent-line-horiz"></div>
+                <div class="scheme__line-vert"></div>
+                <div class="scheme__wrapper">
+                    <div class="scheme__wrapper-line-sqare">
+                        <div class="scheme__child-line-horiz scheme__child-line-horiz-top"></div>
+                        <div class="scheme__child scheme__child-top"></div>
                     </div>
-                    <div class="members__wrapper-empty"></div>
-                </div>
-
-                <!-- <div class="members__member">
-                    <div class="members__member-name">
-                        <label for="member-name-1">Участник&nbsp;№1:</label>
-                        <input id="member-name-1" name="member-name" type="text" placeholder="Имя">
-                        <button class="members__delete" data-id="1"><img src="img/del.jpg" width="58" height="58"
-                                alt="delete"></button>
-                    </div>                 
-               -->
-
-                <button class="members__button add-button" type="submit">Добавить участника</button>
-
-            </form>
-
-            <form action="#" class="costs display-none">
-                <!-- <article class="costs__cost">
-                    <div class="costs__wrapper">
-                        <p class="costs__cost-name">Название первого расхода</p>
-                        <p class="costs__payer">Оплатил: <span class="colortext">Имя 1</span></p>
-                    </div>
-
-                    <div class="costs__wrapper-value">
-                        <div class="costs__value">1000 ₽</div>
-                        <div class="costs__delete"><img src="img/X.png" width="58" height="58" alt="delete"></div>
-                    </div>
-                </article>
-                -->
-                <p class="costs__text">Не внесен еще ни один расход. <br /> Нажмите на кнопку ниже, чтобы начать
-                    добавлять их.</p>
-
-                <button class="costs__button add-button" type="submit">Добавить расход</button>
-
-            </form>
-
-            <secton class="result display-none">
-                <!-- <article class="result__card">
-                    <p class="result__text">Пара <span class="colortext">Андрей</span> и <span
-                            class="colortext">Алена</span> переводят <b>1000 ₽</b> в адрес <span
-                            class="colortext">Евгений</span></p>
-                </article>
-                -->
-
-                <div class="result__wrapper">
-                    <div class="empty"></div>
-                    <a class="result__copy">скопировать текст</a>
-                </div>
-
-                <div class="result__link">
-                    <img src="img/link.jpg" width="58" height="58" alt="link">
-                    <input class="result__text-link" type="text" readonly>
-                </div>
-
-                <div class="result__wrapper">
-                    <div class="empty"></div>
-                    <span class="result__copy-link">скопировать ссылку на расчет</span>
-                </div>
-
-                <div class="result__stats">
-                    <div class="result__stats-header">
-                        <div class="result__stats-icon-wrapper">
-                            <img class="arrow-icon" src="img/spoiler.png" width="58" height="58" alt="link">
-                        </div>
-
-                        <p class="result__stats-text">Итоговая статистика</p>
-                    </div>
-                    <div class="result__stats-body result__stats-body--closed" style="overflow-x: auto">
-                        <div class="result__stats-total"></div>
-                        <p class="result__stats-text-inner">Затраты каждого участника:</p>
-                        <canvas id="canvas-sum-of-cost-per-user"></canvas>
-                        <p class="result__stats-text-inner">Баланс:</p>
-                        <canvas id="canvas-balance"></canvas>
+                    <div class="scheme__wrapper-line-sqare">
+                        <div class="scheme__child-line-horiz scheme__child-line-horiz-bottom"></div>
+                        <div class="scheme__child scheme__child-bottom"></div>
                     </div>
                 </div>
-
-            </secton>
-
-            <div class="next-step display-none">
-                <button class="next-step__button button">
-                </button>
             </div>
-
-            <div class="calculations display-none">
-            </div>
-
-            <div class="how-to-use display-none">
-
-                <p class="how-to-use__text">Что воспользоваться SplitCost необходимо сначала ввести имена участников,
-                    потом внести расходы и далее перейти к результатам расчёта. <br /><br />
-                    Более подробно ознамится с этим поможет видео ниже:<br /><br /></p>
-
-                <!-- YouTube video -->
-                <div class="thumb-wrap">
-                    <div id="play"></div>
-                    <!-- <script>
-                        var tag = document.createElement('script');
-                        tag.src = "https://www.youtube.com/player_api";
-                        var firstScriptTag = document.getElementsByTagName('script')[0];
-                        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-                        var play;
-
-                        function onYouTubePlayerAPIReady() {
-                            play = new YT.Player('play', {
-                                videoId: 'rdbAjm11ShY',
-                            });
-
-                            document.querySelectorAll('.pause-youtube').forEach((li) => {
-                                li.addEventListener("click", function () {
-                                    play.pauseVideo();
-                                });
-                            })
-
-                        }
-                    </script> -->
-
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/rdbAjm11ShY"
-                        id="Youtube" title="YouTube video player" srcdoc="<style>*{padding:0;margin:0;overflow:hidden}
-                        html,body{height:100%}
-                        img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}
-                        span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}
-                        </style>
-                        <a href=https://www.youtube.com/embed/rdbAjm11ShY?autoplay=1>
-                        <img src=https://img.youtube.com/vi/rdbAjm11ShY/hqdefault.jpg alt='Demo video'>
-                        <span>▶</span>
-                        </a>" frameborder="0"
-                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                </div>
-                <!-- End YouTube video -->
-
-            </div>
-
-            <div class="about display-none">
-                <p class="about__text">Проект SplitCost позволяет разделить совместные расходы. <br /><br />
-                    С его помощью вы легко сможете разобраться кто кому сколько должен. Это может быть полезно,
-                    например, в путешествиях, на мероприятиях, при совместном проживании или при использовани
-                    раздельного бюджета в паре.<br /><br />
-                    Разработал Михаил Четвериков.<br />
-                    <a class="link" href="https://github.com/chetverikovmv/splitcost/" target="_blank">Ссылка на
-                        GitHub.</a> </p>
-            </div>
-
-            <div class="loading">
-                <img src="img/loading-icon.gif" width="441" height="291" alt="spinner">
-            </div>
-
-        </main>
-
-
-        <footer class="page-footer">
-            <div class="page-footer__wrapper">
-
-                <p class="page-footer__text">splitcost</p>
-                <b class="copyright__text">2022 - 2023</b>
-
-            </div>
-        </footer>
-    </div>
-
-    <template class="template-member">
-        <article class="members__member">
-            <div class="members__member-name">
-                <label for="member-name">Участник&nbsp;№3:</label>
-                <input id="member-name" name="member-name" type="text" placeholder="Имя" minlength="2" maxlength="31"
-                    autocomplete="off" required>
-                <button class="members__delete" data-id="0"><img src="img/del.jpg" width="58" height="58"
-                        alt="delete"></button>
-                <span class="validation-message-member"></span>
-            </div>
-            <div class="members__member-pair">
-                <label for="member-pair">в&nbsp;паре&nbsp;с&nbsp;…</label>
-                <select id="member-pair" name="member-pair">
-                    <option value="no" selected>—</option>
-                </select>
-            </div>
-        </article>
-    </template>
-
-    <template class="template-cost">
-        <article class="costs__cost">
-            <div class="costs__wrapper">
-                <p class="costs__cost-name">Название первого расхода</p>
-                <p class="costs__payer">Оплатил: <span class="colortext">Имя 1</span></p>
-            </div>
-
-            <div class="costs__wrapper-value">
-                <div class="costs__value">1000 ₽</div>
-                <div class="costs__delete"><img class="costs__delete-pic" src="img/X.png" width="58" height="58"
-                        alt="delete"></div>
-            </div>
-        </article>
-    </template>
-
-    <template class="template-cost-user">
-        <li class="modal-cost__cost-user cost-user">
-            <label class="checkbox" for="cost-user-1"><input class="visually-hidden input checkbox-input"
-                    type="checkbox" id="cost-user-1" name="cost-user-1" checked>
-                <span class="checkbox-indicator checkbox-indicator--cut">Имя 1</span></label>
-        </li>
-    </template>
-
-    <template class="template-result">
-        <article class="result__card">
-            <p class="result__text">Пара <span class="colortext">Андрей</span> и <span class="colortext">Алена</span>
-                переводят <b>1000 ₽</b> в адрес <span class="colortext">Евгений</span></p>
-        </article>
-    </template>
-
-    <template class="template-calculations">
-        <article class="calculation__card">
-            <p class="calculation__text">Расчет №1</p>
-        </article>
-    </template>
-
-
-    <div class="modal container popup-cost">
-        <form class="modal-cost form">
-
-            <div class="modal-cost__heading">
-                <h2 class="h2-site">Расход №1</h2>
-            </div>
-
-            <div class="modal-cost__cost">
-                <div class="modal-cost__name">
-                    <label for="cost__name-1">Название:</label>
-                    <input class="input" id="cost__name-1" name="name" type="text" placeholder="Расход" maxlength="34"
-                        autocomplete="off">
-                    <span class="validation-message-cost"></span>
-                </div>
-                <div class="modal-cost__sum">
-                    <label for="cost__sum-1">Сумма:</label>
-                    <input class="input" id="cost__sum-1" name="sum" type="number" placeholder="100" min="1"
-                        max="999999999999999999" autocomplete="off">
-                    <div class="modal-cost__rub"><img src="img/rub.jpg" width="58" height="58" alt="delete"></div>
-                    <span class="validation-message-cost validation-message-cost--last-child"></span>
-                </div>
-            </div>
-
-            <div class="modal-cost__payment">
-                <div class="modal-cost__payer">
-                    <label for="cost__payer">Оплатил:</label>
-                    <select id="cost__payer" class="input select" name="payer">
-                        <option value="test">test</option>
-                    </select>
-                    <span class="validation-message-cost"></span>
-                </div>
-                <div class="modal-cost__fifty-fifty">
-                    <label class="checkbox" for="fifty-fifty"><input class="visually-hidden input" type="checkbox"
-                            id="fifty-fifty" name="fifty-fifty" checked>
-                        <span class="checkbox-indicator">Разделить поровну <span
-                                class="modal-cost__fifty-fifty--hidden-text"> между всеми</span></span></label>
-                </div>
-            </div>
-
-            <div class="modal-cost__wrapper">
-
-                <p class="modal-cost__users-text">Укажите участников, которые пользовались этим расходом:</p>
-                <span class="validation-message-cost validation-message-cost--checkbox"></span>
-                <ul class="modal-cost__users-list">
-                    <!-- <li class="modal-cost__cost-user cost-user">
-                        <label class="checkbox" for="cost-user-1"><input class="visually-hidden input" type="checkbox"
-                                id="cost-user-1" name="cost-user-1">
-                            <span class="checkbox-indicator">Имя 1</span></label>
-                    </li>
-                   -->
-
-                </ul>
-
-            </div>
-
-            <div class="modal-cost__add">
-                <button class="button modal-cost__button button-type-submit" type="submit"></button>
-            </div>
-
-            <div class="modal__exit">
-                <button class="modal__exit-button" type="button"><img src="img/X.png" width="58" height="58"
-                        alt="exit"></button>
-            </div>
-
-        </form>
-        <div class="overlay"></div>
-    </div>
-
-    <div class="modal container popup-message">
-        <div class="modal-message">
-            <div class="modal-message__heading">
-                <h2 class="h2-site modal-message__heading-text"></h2>
-            </div>
-
-            <p class="modal-message__text"></p>
-
-            <button class="button modal-message__button" type="submit"></button>
-            <button class="button modal-message__button-cancel"></button>
-
-            <div class="modal__exit">
-                <button class="modal__exit-button"><img src="img/X.png" width="58" height="58" alt="exit"></button>
-            </div>
-
         </div>
-        <div class="overlay"></div>
-    </div>
 
-    <div class="notification container">
+        <div class="description__requirements-wrapper requirements">
+            <h3 class="requirements-title">Technical requirements</h3>
+            <div class="requirements__tabs-wrapper">
+                <div class="tab tab-first tab--active">
+                    <span>Own&nbsp;server</span>
+                </div>
+                <div class="tab tab-second">
+                    <span>Amazon Instance</span>
+                </div>
+            </div>
 
-        <p class="notification__text"></p>
+            <div class="requirements__table table table-first table--active">
+                <div class="table__wrapper">
+                    <div class="table__cell">
+                        <p class="table__text">OS + apps</p>
+                        <p class="table__text">Unix/OSX + docker + nvidia-docker</p>
+                    </div>
 
-        <div class="notification__exit">
-            <button class="notification__exit-button"><img src="img/X-gray.png" width="58" height="58"
-                    alt="exit"></button>
+                    <div class="table__cell">
+                        <p class="table__text">CPU</p>
+                        <p class="table__text">4 cores or more (e.g. intel core i5)</p>
+                    </div>
+
+                    <div class="table__cell">
+                        <p class="table__text">Memory</p>
+                        <p class="table__text">16 GB RAM</p>
+                    </div>
+                </div>
+
+                <div class="table__wrapper">
+                    <div class="table__cell">
+                        <p class="table__text">Free space</p>
+                        <p class="table__text">100 GB of free space</p>
+                    </div>
+
+                    <div class="table__cell">
+                        <p class="table__text">Graphics hardware</p>
+                        <p class="table__text">GPU: NVidia only 2Gb+</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="requirements__table table table-second">
+                <div class="table__wrapper">
+                    <div class="table__cell">
+                        <p class="table__text">Instance</p>
+                        <p class="table__text">g4dn.xlarge</p>
+                    </div>
+
+                    <div class="table__cell">
+                        <p class="table__text">GPU</p>
+                        <p class="table__text">1</p>
+                    </div>
+
+                    <div class="table__cell">
+                        <p class="table__text">vCPUs</p>
+                        <p class="table__text">4</p>
+                    </div>
+                </div>
+
+                <div class="table__wrapper">
+                    <div class="table__cell">
+                        <p class="table__text">Memory</p>
+                        <p class="table__text">16 GB RAM</p>
+                    </div>
+
+                    <div class="table__cell">
+                        <p class="table__text">Storage</p>
+                        <p class="table__text">125 GB</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
 </body>
 

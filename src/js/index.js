@@ -1,379 +1,169 @@
 import "../index.html"
-
 import "../style/index.scss";
+import "./tabs.js"
 
-import "./constants.js"; // константы
-import "./menu.js"; // мобильное меню
-import "./Popup.js"; // класс Popup
-import "./popup-with-message.js"; // класс PopupWithMessage extends Popup
-import "./popup-with-form.js"; // класс PopupWithForm extends Popup
-import "./main-content.js"; // управление состояниями главной страницы
-import "./members.js"; // объект с данными об участниках
-import "./Member.js"; // класс Member
-import "./Cost.js"; // класс Cost
-import "./costs.js"; // объект с данными о расходах
-import "./result.js"; // объект с данными о результатах расчета
-import "./Result-card.js"; // класс ResultCard
-import "./Notification.js"; // класс Notification
-import "./main-menu.js"; // уравление состояниями при работе с главным меню
-import "./section-members.js"; // раздел "участники"
-import "./section-costs.js"; // раздел "расходы"
-import "./section-result.js"; // раздел "результат"
-import "./location-resolver.js"; // роутер главного меню
-import "./backend.js"; // бэкенд
-import "./Calculation-card.js"; // класс CalculationCard
-import "./calculations-page.js"; // страница "Мои расчеты"
+import { createRoot } from 'react-dom/client';
+import React from 'react';
+import { useState, useRef } from 'react'
+import moment from 'moment';
 
-import {
-    PopupWithMessage
-} from "./popup-with-message.js";
-import {
-    selectors
-} from "./constants.js";
-import {
-    main
-} from "./main-content.js";
-import {
-    members
-} from "./members.js";
-import {
-    costs
-} from "./costs.js";
-import {
-    result
-} from "./result.js";
-import {
-    menu
-} from "./main-menu.js";
-import {
-    sectionMembers
-} from "./section-members.js";
-import {
-    sectionCosts
-} from "./section-costs.js";
-import {
-    sectionResult
-} from "./section-result.js";
-import {
-    Backend
-} from "./backend.js";
-import {
-    calculations
-} from "./calculations-page.js";
-import { ResultCard } from "./Result-card.js";
-
-const {
-    menuSelectors: {
-        siteListItemMainSelector,
-        siteListItemHowToUseSelector,
-        siteListItemAboutSelector,
-    },
-
-    popupsSelectors: {
-        popupMessageSelector,
-    },
-
-    arrowButtons: {
-        arrowButtonMembersSelector,
-        arrowButtonCostsSelector,
-        arrowButtonResultsSelector
-    },
-
-    membersSelectors: {
-        memberSelector,
-        validationMessageMemberSelector,
-    },
-
-    mainSelectors: {
-        nextStepButtonSelector,
-        displayNoneClass
-    },
-} = selectors;
-
-/// УПРАВЛЕНИЕ "СТРЕЛОЧНЫМ" МЕНЮ ///
-
-const arrowMemberLink = document.querySelector(arrowButtonMembersSelector);
-const arrowCostsLink = document.querySelector(arrowButtonCostsSelector);
-const arrowResultLink = document.querySelector(arrowButtonResultsSelector);
-
-arrowMemberLink.addEventListener('click', (evt) => { // кнопка "УЧАСТНИКИ"
-    evt.preventDefault();
-    switch (main.status) {
-        // case 'MembersMode':
-        //     break;
-
-        // case 'CostsMode':
-        //     confirmBackToMembersFromCosts.open('Вернуться к внесению участников?', `Вся расходы будут удалены!`, 'ОК', 'отмена');
-        //     break;
-
-        // case 'ResultMode':
-        //     startNewCalculation();
-        //     break;
-        case 'CostsMode':
-            main.enableDisabledMembersMode();
-            break;
-
-        case 'ResultMode':
-            main.enableDisabledMembersMode();
-            break;
-    }
-
-});
-
-arrowCostsLink.addEventListener('click', (evt) => { // кнопка "РАСХОДЫ"
-    evt.preventDefault();
-    switch (main.status) {
-        case 'MembersMode':
-            checkAndEnableCostMode();
-            break;
-
-        case 'DisabledMembersMode':
-            checkAndEnableCostMode();
-            break;
-
-            // case 'CostsMode':
-            //     break;
-
-        case 'ResultMode':
-            main.enableCostsMode();
-            result.membersList.length = 0;
-            result.costsList.length = 0;
-            sectionResult.clearResults();
-            break;
-    }
-
-});
-
-arrowResultLink.addEventListener('click', (evt) => { // кнопка "РЕЗУЛЬТАТ"
-    evt.preventDefault();
-    switch (main.status) {
-        case 'MembersMode':
-            confirmNextStepPopup.open('Нельзя перейти сразу к результату', `Сначала введите расходы`, 'ОК', 'no cancel button')
-            break;
-
-        case 'DisabledMembersMode':
-            checkAndEnableResultMode();
-            break;
-
-        case 'CostsMode':
-            checkAndEnableResultMode();
-            break;
-
-            // case 'ResultMode':
-            //     break;
-    }
-
-});
-
-/// УПРАВЛЕНИЕ КНОПКОЙ "ДАЛЕЕ" ///
-
-// Подтверждение перехода к расходам при невалидных полях
-const confirmNextStepPopup = new PopupWithMessage(
-    popupMessageSelector,
-
-    () => { // по клику на "да" (сабмит)
-        confirmNextStepPopup.close();
-    },
-
-    () => { // по клику на "отмена"
-        confirmNextStepPopup.close();
-    }
-);
-
-// Подтверждение перехода к новому расчету
-const confirmNewCalculationPopup = new PopupWithMessage(
-    popupMessageSelector,
-
-    () => { // по клику на "да" (сабмит)                
-        confirmNewCalculationPopup.close();
-
-        members.membersList = [{
-                id: 1,
-                name: "",
-                pair: 0,
-            },
-            {
-                id: 2,
-                name: "",
-                pair: 0,
-            },
-        ];
-        costs.costsList.length = 0;
-        result.membersList.length = 0;
-        result.costsList.length = 0;
-        localStorage.removeItem('current');
-
-        window.location.hash = '#/';
-        window.locationResolver('#/');
-
-        sectionCosts.costsTextHint.classList.remove(displayNoneClass);
-
-        sectionMembers.clearMembers();
-        sectionMembers.renderMembers();
-        sectionCosts.clearCosts();
-        sectionResult.clearResults();
-
-        members.eventName = '';
-        sectionMembers.eventNameInput.value = '';
-
-        main.enableMembersMode();
-    },
-
-    () => { // по клику на "отмена"
-        confirmNewCalculationPopup.close();
-    }
-);
-
-// Подтверждение перехода из раздела "Расходы" в раздел "Участники"
-const confirmBackToMembersFromCosts = new PopupWithMessage(
-    popupMessageSelector,
-
-    () => { // по клику на "да" (сабмит)                
-        confirmBackToMembersFromCosts.close();
-
-        costs.costsList.length = 0;
-        result.membersList.length = 0;
-        result.costsList.length = 0;
-
-        sectionCosts.costsTextHint.classList.remove(displayNoneClass);
-
-        sectionCosts.clearCosts();
-        sectionResult.clearResults();
-        main.enableMembersMode();
-    },
-
-    () => { // по клику на "отмена"
-        confirmBackToMembersFromCosts.close();
-    }
-);
-
-// обрабатываем переход по кнопке "далее"
-const nextStepButton = document.querySelector(nextStepButtonSelector);
-
-const checkAndEnableCostMode = () => {
-    if (checkMembersValidity().length > 0) {
-        confirmNextStepPopup.open('Пустые поля', `Заполните пропущенные имена участников`, 'ОК', 'no cancel button')
-    }
-
-    if (checkMembersRepeatability()) {
-        confirmNextStepPopup.open('Повторные имена участников', `Введите уникальные имена для участников`, 'ОК', 'no cancel button')
-    }
-
-    if (checkMembersValidity().length == 0 && !checkMembersRepeatability()) {
-        main.enableCostsMode()
-    }
-}
-
-const sendDataToServer = (method) => {
-    const jointOriginalObjects = calculations.mergeOriginalObjects(members.eventName, members.membersList, costs.costsList);
-    jointOriginalObjects.date = new Date().toJSON();
-    const backend = new Backend();
-
-    switch (method) {
-        case 'POST':
-            backend.create(jointOriginalObjects,  sectionResult.makeLinkToCalculation);
-            break;
-
-        case 'PATCH':
-            backend.change(jointOriginalObjects);
-            break;
-    }
-}
-
-const checkAndSendAndEnable = () => {
-    if (localStorage.getItem('current')) {
-        sendDataToServer('PATCH');
-    } else {
-        sendDataToServer('POST');
-
-    }
-
-    main.enableResultMode();
-
-}
-
-
-const checkAndEnableResultMode = () => {
-    sectionResult.clearResults();   
-    sectionResult.calculateResult();   
+function InputAndPlayer() {
+    const [url, setUrl] = useState('');
+    const [isInputMode, setIsInputMode] = useState(true);
   
-    costs.costsList.length == 0 ?
-        confirmNextStepPopup.open('Нет расходов', `Добавьте хотя бы один расход`, 'ОК', 'no cancel button') :
-        checkAndSendAndEnable();
-}
-
-const startNewCalculation = () => {
-    confirmNewCalculationPopup.open('Начать новый расчет?', `Вся информация будет очищена`, 'ОК', 'отмена');
-}
-
-nextStepButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    nextStepButton.blur(); // убираем фокус чтобы корректно отробатывало закрытие окна на "enter"    
-
-    switch (main.status) {
-        case 'MembersMode':
-            checkAndEnableCostMode();
-            break;
-
-        case 'DisabledMembersMode':
-            checkAndEnableCostMode();
-            break;
-
-        case 'CostsMode':
-            checkAndEnableResultMode();
-            break;
-
-        case 'ResultMode':
-            startNewCalculation();
-            break;
+    const [inputTitle, setInputTitle] = useState('');
+    const [isError, setIsError] = useState(false);
+  
+    const playRef = useRef(null);
+    const barRef = useRef(null);
+    const volumeRef = useRef(null);
+    const [isPause, setIsPause] = useState(true);
+    const [progress, setProgress] = useState('0%');
+    const [volume, setVolume] = useState("100%");
+    const [currentTime, setCurrentTime] = useState(0);
+    const [loader, setLoader] = useState(true);
+  
+    const updateProgress = (e) => {
+      const { duration, currentTime } = e.target;
+      const PercentProgress = (currentTime / duration) * 100;
+      setProgress(PercentProgress + '%');
+      setCurrentTime(currentTime);
     }
-
-});
-
-// проверка валидности полей участников
-const checkMembersValidity = () => {
-    const invalidInputs = [];
-
-    const memberNodes = document.querySelectorAll(memberSelector);
-
-    memberNodes.forEach((itemNode, idNode) => {
-        let selectNode = itemNode.querySelector(`#member-name-${idNode+1}`);
-
-        let validationMessage = itemNode.querySelector(validationMessageMemberSelector);
-
-        if (!selectNode.validity.valid) {
-            invalidInputs.push(`"Участник №${idNode+1}"`);
-            validationMessage.textContent = 'Введите имя'
+  
+    const setProgressPoint = (e) => {
+      const width = barRef.current.clientWidth;
+      const coordX = e.nativeEvent.offsetX;
+      const duration = playRef.current.duration;
+      const isPointNode = e.target.classList.contains('progress-bar_current-point')
+      if (!isPointNode) playRef.current.currentTime = (coordX / width) * duration;
+    }
+  
+    const setVolumePoint = (e) => {
+      const width = volumeRef.current.clientWidth;
+      const coordX = e.nativeEvent.offsetX;
+      const isPointNode = e.target.classList.contains('volume__current-point');
+      if (!isPointNode) {
+        playRef.current.volume = (coordX / width);
+        setVolume(((coordX / width) * 100) + "%");
+      }
+    }
+  
+    const handlerBackClick = () => {
+      playRef.current.pause();
+      setIsPause(true);
+      setIsInputMode(true);
+      setLoader(false);
+      setProgress("0%");
+    }
+  
+    const handlerInputChange = (e) => {
+      setInputTitle(e.target.value);
+      setUrl(e.target.value);
+      setIsError(false)
+    }
+  
+    const isValidUrl = (string) => {
+      try {
+        new URL(string);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  
+    const enableInputMode = () => {
+      setLoader(true)
+      setIsInputMode(false)
+    }
+  
+    const handlerButtonClick = () => {
+      isValidUrl(url) ? enableInputMode() : setIsError(true);
+    }
+  
+    const stopLoader = () => {
+      setLoader(false);
+    }
+  
+    return (
+      <>
+        {isInputMode &&
+  
+          <section className="input-section">
+            <p className="input-section__text">Insert the link</p>
+            <div className="input-section__wrapper">
+              <input className={isError && "input-error input" || "input"} onChange={handlerInputChange} value={inputTitle} type="text" placeholder="https://"></input>
+              <button onClick={handlerButtonClick} type="button">
+                <div className="input-section__arrow"></div>
+              </button>
+            </div>
+            {isError && <p className="error-text">Error: invalid link</p>}
+          </section>
+  
         }
-    })
-    return invalidInputs
-}
+  
+        {!isInputMode &&
+  
+          <section className="player-section">
+            <p onClick={handlerBackClick} className="player-section__text">← Back</p>
+            <div className="player-section__wrapper">
+              {loader ? <div className="loader"></div> : <div className="no-loader"></div>}
+  
+              {isPause ?
+                <div className="player-section__play" onClick={() => {
+                  playRef.current.play();
+                  setIsPause(false);
+                }}>
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 40V0H4.34286L40 18.7952V20.9639L4.34286 40H0Z" fill="white" />
+                  </svg>
+                </div>
+                :
+                <div className="player-section__pause" onClick={() => {
+                  playRef.current.pause()
+                  setIsPause(true)
+                }}>
+                  <svg width="4" height="40" viewBox="0 0 4 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="4" height="40" fill="white" />
+                  </svg>
+  
+                  <svg className="player-section__svg-pause" width="4" height="40" viewBox="0 0 4 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="4" height="40" fill="white" />
+                  </svg>
+                </div>
+              }
+  
+              <div onClick={setProgressPoint} ref={barRef} className="player-section__progress-bar progress-bar">
+                <div className="progress-bar__scale">
+                  <div className="progress-bar_current-line" style={{ width: progress }}></div>
+                  <div className="progress-bar_current-point"></div>
+                </div>
+              </div>
+  
+              <div className="player-section__time-volume time-volume">
+                <p className="time-volume__time">{moment(currentTime * 1000).format('mm:ss')}</p>
+  
+                <div onClick={setVolumePoint} ref={volumeRef} className="time-volume__volume volume">
+                  <div className="volume__scale">
+                    <div className="volume__current-line" style={{ width: volume }}></div>
+                    <div className="volume__current-point"></div>
+                  </div>
+                </div>
+              </div>
+  
+              <audio onTimeUpdate={updateProgress} onCanPlayThrough={stopLoader}
+                ref={playRef} src={url}></audio>
+            </div>
+          </section>
+  
+        }
+      </>
+    );
+  }
+  
+  const domNode = document.getElementById('react');
+  const root = createRoot(domNode);
+  root.render(<InputAndPlayer />);
+   
 
-// проверка повторов полей участников
-const checkMembersRepeatability = () => {
-    const inputs = [];
 
-    let isRepeatMembers = false;
-
-    const memberNodes = document.querySelectorAll(memberSelector);
-
-    memberNodes.forEach((itemNode, idNode) => {
-        let selectNode = itemNode.querySelector(`#member-name-${idNode+1}`);
-        inputs.push(selectNode.value);
-    })
-
-    const uniqInputs = Array.from(new Set(inputs));
-    uniqInputs.length == inputs.length ? isRepeatMembers = false : isRepeatMembers = true;
-
-    return isRepeatMembers
-}
-
-
-// запуск спиннера
-menu.enableLoadingMode();
-
-// чистим куррент локалстордж
-localStorage.removeItem('current');
-
-// рендерим участников в первый раз
-sectionMembers.renderMembers();
+  

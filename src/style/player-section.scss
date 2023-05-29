@@ -1,0 +1,145 @@
+.player-section__wrapper {
+    width: 100%;
+    height: 198px;
+
+    background: #CFD3D6;
+    margin-top: 20px;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.loader {
+    width: 320px;
+    height: 4px;
+    background: #FFFFFF;
+    animation: loaderAnimation 1s linear infinite;    
+}
+
+.no-loader {
+    width: 320px;
+    height: 4px;
+    background: transparent;
+    transform: translate(-340px, -20px);
+}
+
+.player-section__text {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: -0.4px;
+    line-height: 32px;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.player-section__play,
+.player-section__pause {
+    cursor: pointer;
+}
+
+.player-section__svg-pause {
+    margin-left: 24px;
+}
+
+.player-section__progress-bar {
+    height: 12px;
+    width: 100%;
+
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.progress-bar__scale {
+    width: 100%;
+    height: 2px;
+
+    display: flex;
+    background: #ADACAD;
+}
+
+.progress-bar_current-line {
+    // width: 246px;
+    height: 2px;
+
+    background: #FFFFFF;
+}
+
+.progress-bar_current-point {
+    width: 16px;
+    height: 12px;
+
+    background: #FFFFFF;
+    border-radius: 6px;
+    margin-top: -5px;
+    margin-left: -8px;
+}
+
+.player-section__time-volume {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 46px;
+}
+
+.time-volume__time {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.time-volume__volume {
+    width: 191px;
+    height: 12px;
+
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.volume__scale {
+    width: 252px;
+    height: 2px;
+
+    background: #FFFFFF;
+    display: flex;
+}
+
+.volume__current-line {
+    height: 2px;
+
+    background: #000000;
+}
+
+.volume__current-point {
+    width: 16px;
+    height: 12px;
+
+    background: #000000;
+    margin-top: -5px;
+    margin-left: -8px;
+}
+
+@media screen and (min-width: $desktop-width) {
+    .player-section__wrapper {
+        width: 620px;
+    }
+
+    .time-volume__volume {
+        width: 252px;
+    }
+}
+
+@keyframes loaderAnimation {
+    0% {
+        transform: translate(-340px, -20px);
+    }
+
+    100% {
+        transform: translate(1380px, -20px);
+    }
+}
